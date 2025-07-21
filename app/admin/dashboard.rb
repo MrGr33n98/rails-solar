@@ -1,12 +1,47 @@
-ActiveAdmin.register_page 'Dashboard' do
-  menu priority: 1, label: proc { I18n.t('active_admin.dashboard') }
+# frozen_string_literal: true
+ActiveAdmin.register_page "Dashboard" do
+  menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
-  content title: proc { I18n.t('active_admin.dashboard') } do
-    div class: 'blank_slate_container', id: 'dashboard_default_message' do
-      span class: 'blank_slate' do
-        span t('dashboard.welcome')
-        small link_to(t('dashboard.call_to_action'), 'https://medium.com/jungletronics/rails-active-admin-3-2-0-85d04f40e066')
+  content title: proc { I18n.t("active_admin.dashboard") } do
+    columns do
+      column do
+        panel "Recent Companies" do
+          ul do
+            Company.last(5).map do |company|
+              li link_to(company.name, admin_company_path(company))
+            end
+          end
+        end
+      end
+
+      column do
+        panel "Recent Leads" do
+          ul do
+            Lead.last(5).map do |lead|
+              li link_to(lead.email, admin_lead_path(lead))
+            end
+          end
+        end
+      end
+
+      column do
+        panel "Recent Quotes" do
+          ul do
+            Quote.last(5).map do |quote|
+              li link_to(quote.name, admin_quote_path(quote))
+            end
+          end
+        end
       end
     end
-  end
+
+    columns do
+      column do
+        panel "Overview" do
+          para "Welcome to the SolarInside Admin Dashboard!"
+          para "Here you can manage companies, leads, quotes, and other essential data."
+        end
+      end
+    end
+  end # content
 end

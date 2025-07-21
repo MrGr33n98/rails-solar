@@ -1,7 +1,7 @@
 class Post < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 50 }
-  validates :body, presence: true # , length: { minimum: 10, maximum: 1000 }
-  belongs_to :user
+  validates :body, presence: true, length: { minimum: 10, maximum: 1000 }
+  belongs_to :user # This is the author
   has_many :comments, dependent: :destroy
   has_many :notifications, through: :user, dependent: :destroy
   has_many :notification_mentions, through: :user, dependent: :destroy
@@ -9,14 +9,14 @@ class Post < ApplicationRecord
   validate :no_curse_words
 
   scope :published, -> { where.not(published_at: nil) }
-  scope :unpublished, -> { where(published_at: nil) }
+  scope :draft, -> { where(published_at: nil) }
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[title body comments user] # Allow searching by title, body, comments  and user
+    %w[title body user_id published_at] # Allow searching by title, body, user_id and published_at
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    [] # We don't have any searchable associations in this case
+    ["user", "comments"]
   end
 
   private
@@ -29,6 +29,6 @@ class Post < ApplicationRecord
   end
 
   def curse_word_found?(text)
-    CURSE_WORDS.any? { |word| text.match?(Regexp.new("\\b#{Regexp.escape(word)}\\b", Regexp::IGNORECASE)) }
+    CURSE_WORDS.any? { |word| text.match?(Regexp.new("\b#{Regexp.escape(word)}\b", Regexp::IGNORECASE)) }
   end
 end

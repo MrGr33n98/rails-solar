@@ -44,7 +44,25 @@ gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+
+# Autenticação e RBAC
 gem 'devise'
+gem 'pundit'
+
+# CORS para permitir chamadas do Next.js
+gem 'rack-cors'
+
+# Geolocalização e PostGIS
+gem 'activerecord-postgis-adapter'
+
+# Cache e background jobs
+gem 'redis'
+gem 'sidekiq'
+
+# Testes e desenvolvimento
+gem 'rspec-rails', group: [:development, :test]
+gem 'factory_bot_rails', group: :test
+gem 'faker', group: :test
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
@@ -78,3 +96,6 @@ end
 gem "noticed", "= 2.2"
 gem 'activeadmin', '~> 3.2.0'
 gem 'sassc'
+gem 'active_model_serializers'
+gem 'ancestry'
+gem 'country_select'

@@ -1,23 +1,31 @@
 Rails.application.routes.draw do
+  # API para consumo do frontend Next.js
+  namespace :api do
+    namespace :v1 do
+      get 'marketing_campaigns/index'
+      get 'marketing_campaigns/create'
+      get 'quotes/create'
+      get 'reviews/index'
+      get 'reviews/create'
+      resources :companies,  only: %i[index show]
+      resources :categories, only: %i[index show]
+      resources :products,   only: %i[index show]
+      resources :quotes,     only: %i[create]
+      resources :reviews,    only: %i[index create]
+      resources :marketing_campaigns, only: %i[index create]
+    end
+  end
+
+  # Admin users e ActiveAdmin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  get 'users/profile'
+
+  # Usuários Devise (front e API privada)
   devise_for :users, controllers: {
-    sessions: 'users/sessions',
+    sessions:      'users/sessions',
     registrations: 'users/registrations'
   }
 
-  get 'u/:id', to: 'users#profile', as: 'user'
-
-  # /post/1/comments/4
-  resources :posts do
-    resources :comments
-  end
-
-  get 'home', to: 'pages#home'
-  get 'about', to: 'pages#about'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  root 'pages#home'
+  # Root para o painel administrativo
+  root to: 'admin/dashboard#index'
 end

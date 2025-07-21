@@ -1,6 +1,4 @@
-include Rails.application.routes.url_helpers
-include ActionView::Helpers::AssetUrlHelper
-include ActionView::Helpers::UrlHelper
+
 
 ActiveAdmin.register Company do
 
@@ -19,7 +17,7 @@ ActiveAdmin.register Company do
     column :installation_count
     column :logo do |company|
       if company.logo.attached?
-        image_tag url_for(company.logo), width: 50
+        image_tag helpers.rails_blob_url(company.logo), width: 50
       end
     end
     column :created_at
@@ -60,7 +58,7 @@ ActiveAdmin.register Company do
       row :location
       row :logo do |company|
         if company.logo.attached?
-          image_tag url_for(company.logo), width: 200
+          image_tag helpers.rails_blob_url(company.logo), width: 200
         end
       end
       row :created_at

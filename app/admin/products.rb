@@ -1,6 +1,4 @@
-include Rails.application.routes.url_helpers
-include ActionView::Helpers::AssetUrlHelper
-include ActionView::Helpers::UrlHelper
+
 
 ActiveAdmin.register Product do
 
@@ -20,7 +18,7 @@ ActiveAdmin.register Product do
     column :images do |product|
       if product.images.attached?
         product.images.map do |img|
-          image_tag url_for(img), width: 50
+          image_tag helpers.rails_blob_url(img), width: 50
         end.join(' ').html_safe
       end
     end
@@ -66,7 +64,7 @@ ActiveAdmin.register Product do
       row :images do |product|
         if product.images.attached?
           product.images.map do |img|
-            image_tag url_for(img), width: 100
+            image_tag helpers.rails_blob_url(img), width: 100
           end.join(' ').html_safe
         end
       end

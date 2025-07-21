@@ -1,0 +1,131 @@
+# Checklist para adicionar upload de arquivos (ActiveStorage) em Categories, Companies e Products no ActiveAdmin
+
+## 1. Instalar e migrar o ActiveStorage (se ainda não fez)
+```
+rails active_storage:install
+rails db:migrate
+```
+
+## 2. Atualizar os models
+
+### Category
+```ruby
+class Category < ApplicationRecord
+  # ...existing code...
+  has_one_attached :image # ou :seo_image, conforme o caso
+end
+```
+
+### Company
+```ruby
+class Company < ApplicationRecord
+  # ...existing code...
+  has_one_attached :logo
+end
+```
+
+### Product
+```ruby
+class Product < ApplicationRecord
+  # ...existing code...
+  has_many_attached :images
+end
+```
+
+## 3. Atualizar o ActiveAdmin
+
+### app/admin/categories.rb
+```ruby
+permit_params :name, :slug, :description, :parent_id, :active, :depth, :image, ... # outros campos
+
+form do |f|
+  f.inputs do
+    # ...existing fields...
+    f.input :image, as: :file
+  end
+  f.actions
+end
+
+show do
+  attributes_table do
+    # ...existing fields...
+    row :image do |category|
+      if category.image.attached?
+        image_tag url_for(category.image), width: 200
+      end
+    end
+  end
+end
+```
+
+### app/admin/companies.rb
+```ruby
+permit_params :name, :description, :logo, ...
+
+form do |f|
+  f.inputs do
+    # ...existing fields...
+    f.input :logo, as: :file
+  end
+  f.actions
+end
+
+show do
+  attributes_table do
+    # ...existing fields...
+    row :logo do |company|
+      if company.logo.attached?
+        image_tag url_for(company.logo), width: 200
+      end
+    end
+  end
+end
+```
+
+### app/admin/products.rb
+```ruby
+permit_params :name, :seo_url, images: []
+
+form do |f|
+  f.inputs do
+    # ...existing fields...
+    f.input :images, as: :file, input_html: { multiple: true }
+  end
+  f.actions
+end
+
+show do
+  attributes_table do
+    # ...existing fields...
+    row :images do |product|
+      if product.images.attached?
+        product.images.each do |img|
+          span image_tag url_for(img), width: 100
+        end
+      end
+    end
+  end
+end
+```
+
+## 4. Adicionar o helper `url_for` no ActiveAdmin (se necessário)
+No topo do arquivo admin:
+```ruby
+include Rails.application.routes.url_helpers
+```
+
+## 5. Testar uploads e exibição
+- Faça upload de arquivos nas abas desejadas pelo ActiveAdmin.
+- Verifique se aparecem corretamente no show/index.
+
+## 6. Versionar e subir para o repositório
+```
+git checkout -b feature/upload-support
+git add .
+git commit -m "feat: upload de arquivos em categories, companies e products"
+git push -u origin feature/upload-support
+```
+
+---
+
+Pronto! Com esses passos, você terá upload de arquivos funcionando nas três entidades principais do seu admin.

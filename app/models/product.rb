@@ -1,4 +1,5 @@
 class Product < ApplicationRecord
+  has_many_attached :images
   has_and_belongs_to_many :categories
   has_many :feature_groups, dependent: :destroy
 

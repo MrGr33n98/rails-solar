@@ -1,6 +1,10 @@
+include Rails.application.routes.url_helpers
+include ActionView::Helpers::AssetUrlHelper
+include ActionView::Helpers::UrlHelper
+
 ActiveAdmin.register Company do
 
-  permit_params :name, :description, :user_id, :verified, :target_segment, :annual_energy_output, :installation_count, :location
+  permit_params :name, :description, :user_id, :verified, :target_segment, :annual_energy_output, :installation_count, :location, :logo
 
   index do
     selectable_column
@@ -13,6 +17,11 @@ ActiveAdmin.register Company do
     end
     column :annual_energy_output
     column :installation_count
+    column :logo do |company|
+      if company.logo.attached?
+        image_tag url_for(company.logo), width: 50
+      end
+    end
     column :created_at
     actions
   end
@@ -32,6 +41,7 @@ ActiveAdmin.register Company do
       f.input :annual_energy_output
       f.input :installation_count
       f.input :location # Assuming this is a string field for address
+      f.input :logo, as: :file
     end
     f.actions
   end
@@ -48,6 +58,11 @@ ActiveAdmin.register Company do
       row :annual_energy_output
       row :installation_count
       row :location
+      row :logo do |company|
+        if company.logo.attached?
+          image_tag url_for(company.logo), width: 200
+        end
+      end
       row :created_at
       row :updated_at
     end

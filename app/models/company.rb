@@ -1,4 +1,5 @@
 class Company < ApplicationRecord
+  has_one_attached :logo
   belongs_to :user
   has_many   :certifications, dependent: :destroy
   has_many   :reviews,        dependent: :destroy

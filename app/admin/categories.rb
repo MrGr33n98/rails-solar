@@ -1,3 +1,7 @@
+include Rails.application.routes.url_helpers
+include ActionView::Helpers::AssetUrlHelper
+include ActionView::Helpers::UrlHelper
+
 ActiveAdmin.register Category do
   permit_params :name, :slug, :description, :parent_id, :active, :depth,
     :seo_title, :seo_description, :seo_keywords, :canonical_url, :meta_robots, :h1, :intro_text, :schema_markup, :seo_image

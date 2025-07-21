@@ -1,6 +1,10 @@
+include Rails.application.routes.url_helpers
+include ActionView::Helpers::AssetUrlHelper
+include ActionView::Helpers::UrlHelper
+
 ActiveAdmin.register Product do
 
-  permit_params :name, :seo_url, :seo_title, :status, :kind, :premium_until, :source, :country, category_ids: []
+  permit_params :name, :seo_url, :seo_title, :status, :kind, :premium_until, :source, :country, category_ids: [], images: []
 
   index do
     selectable_column
@@ -13,6 +17,13 @@ ActiveAdmin.register Product do
     column :premium_until
     column :source
     column :country
+    column :images do |product|
+      if product.images.attached?
+        product.images.map do |img|
+          image_tag url_for(img), width: 50
+        end.join(' ').html_safe
+      end
+    end
     column :created_at
     actions
   end
@@ -34,6 +45,7 @@ ActiveAdmin.register Product do
       f.input :source
       f.input :country, as: :select, collection: ISO3166::Country.all.map { |c| [c.translations[I18n.locale.to_s] || c.name, c.alpha2] }
       f.input :categories, as: :check_boxes
+      f.input :images, as: :file, input_html: { multiple: true }
     end
     f.actions
   end
@@ -50,6 +62,13 @@ ActiveAdmin.register Product do
       row :country
       row :categories do |product|
         product.categories.map(&:name).join(", ")
+      end
+      row :images do |product|
+        if product.images.attached?
+          product.images.map do |img|
+            image_tag url_for(img), width: 100
+          end.join(' ').html_safe
+        end
       end
       row :created_at
       row :updated_at

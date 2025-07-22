@@ -2,6 +2,12 @@ ActiveAdmin.register AssessCampaign do
 
   permit_params :product_id, :title, :code, :owner_id, :goal, :achieved, :shares, :prize, :starts_at, :ends_at, :debutantes, :status
 
+  # Scopes para as abas
+  scope :all, default: true
+  scope("Ativos")    { |c| c.where(status: 'active') }
+  scope("Na fila")   { |c| c.where(status: 'queued') }
+  scope("Expirados") { |c| c.where(status: 'expired') }
+
   index do
     selectable_column
     id_column

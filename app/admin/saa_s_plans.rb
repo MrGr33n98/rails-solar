@@ -2,6 +2,17 @@ ActiveAdmin.register SaasPlan do
 
   permit_params :name, :saas_product_id, :tier, :features, :price, :active
 
+  # Scopes para as abas
+  scope("Clientes")      { |plans| plans.where(tier: 'clientes') }
+  scope("Advanced")      { |plans| plans.where(tier: 'advanced') }
+  scope("Profissional")  { |plans| plans.where(tier: 'profissional') }
+  scope("Starter")       { |plans| plans.where(tier: 'starter') }
+  scope("Prospecção")    { |plans| plans.where(tier: 'prospeccao') }
+  scope("Growth")        { |plans| plans.where(tier: 'growth') }
+  scope("Reputation")    { |plans| plans.where(tier: 'reputation') }
+  scope("Gratuitos")     { |plans| plans.where(tier: 'gratuito') }
+  scope :all, default: true
+
   index do
     selectable_column
     id_column

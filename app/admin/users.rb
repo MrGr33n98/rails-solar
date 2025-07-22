@@ -2,13 +2,18 @@ ActiveAdmin.register User do
 
   permit_params :email, :password, :password_confirmation, :name, :role, :phone, :banned_until, :is_super_admin
 
+  # Scopes para as abas
+  scope :all, default: true
+  scope("Usuários Admin") { |users| users.where(role: 'admin') }
+  scope("Usuários do SAAS") { |users| users.where(role: 'saas') }
+
   index do
     selectable_column
     id_column
     column :email
     column :name
     column :role do |user|
-      user.role.humanize
+      user.role.present? ? user.role.humanize : "-"
     end
     column :is_super_admin
     column :banned_until
@@ -41,7 +46,7 @@ ActiveAdmin.register User do
       row :email
       row :name
       row :role do |user|
-        user.role.humanize
+        user.role.present? ? user.role.humanize : "-"
       end
       row :phone
       row :banned_until

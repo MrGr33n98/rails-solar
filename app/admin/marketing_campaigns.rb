@@ -1,6 +1,13 @@
 ActiveAdmin.register MarketingCampaign do
-
   permit_params :name, :channel, :template, :scheduled_at
+
+  # Scopes para as abas
+  scope :all, default: true
+  scope("ATIVOS")         { |c| c.where(channel: 'active') }
+  scope("Planos Ouro")    { |c| c.where(channel: 'gold') }
+  scope("Planos Prata")   { |c| c.where(channel: 'silver') }
+  scope("Planos Bronze")  { |c| c.where(channel: 'bronze') }
+  scope("Planos Amostra") { |c| c.where(channel: 'sample') }
 
   index do
     selectable_column
@@ -43,16 +50,4 @@ ActiveAdmin.register MarketingCampaign do
     end
     active_admin_comments
   end
-
-  # Example of a custom action for dispatching a campaign
-  # action_item :dispatch, only: :show do
-  #   link_to 'Dispatch Campaign', dispatch_admin_marketing_campaign_path(marketing_campaign), method: :put
-  # end
-
-  # member_action :dispatch, method: :put do
-  #   marketing_campaign = MarketingCampaign.find(params[:id])
-  #   # Add logic to dispatch the campaign here
-  #   redirect_to admin_marketing_campaign_path(marketing_campaign), notice: "Campaign dispatched!"
-  # end
-
 end

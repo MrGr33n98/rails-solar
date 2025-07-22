@@ -1,6 +1,10 @@
-
-
 ActiveAdmin.register Product do
+
+  # Scopes para as abas
+  scope :all, default: true
+  scope("Pending")   { |products| products.where(status: :pending) }
+  scope("Approved")  { |products| products.where(status: :approved) }
+  scope("Canceled")  { |products| products.where(status: :canceled) }
 
   permit_params :name, :seo_url, :seo_title, :status, :kind, :premium_until, :source, :country, category_ids: [], images: []
 
@@ -29,7 +33,7 @@ ActiveAdmin.register Product do
   filter :name
   filter :status
   filter :kind
-  filter :categories
+  filter :categories, as: :select, collection: Category.all.map { |c| [c.name, c.id] }
   filter :created_at
 
   form do |f|

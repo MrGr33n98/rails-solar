@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_22_002239) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -89,6 +89,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.integer "debutantes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
     t.index ["owner_id"], name: "index_assess_campaigns_on_owner_id"
     t.index ["product_id"], name: "index_assess_campaigns_on_product_id"
   end
@@ -97,10 +98,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.string "name"
     t.string "slug"
     t.text "description"
-    t.integer "parent_id", null: false
+    t.integer "parent_id"
     t.boolean "active"
-    t.integer "depth"
-    t.string "ancestry"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "seo_title"
@@ -112,6 +111,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.text "intro_text"
     t.text "schema_markup"
     t.index ["parent_id"], name: "index_categories_on_parent_id"
+  end
+
+  create_table "categories_products", id: false, force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.integer "product_id", null: false
+    t.index ["category_id", "product_id"], name: "index_categories_products_on_category_and_product", unique: true
+    t.index ["product_id", "category_id"], name: "index_categories_products_on_product_and_category"
   end
 
   create_table "certifications", force: :cascade do |t|
@@ -334,6 +340,50 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
+  create_table "saa_s_leads", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email", null: false
+    t.string "phone_number"
+    t.string "preferred_contact_time"
+    t.string "contact_method"
+    t.string "company_name"
+    t.string "building_type"
+    t.string "roof_type"
+    t.decimal "available_roof_area", precision: 8, scale: 2
+    t.string "address"
+    t.string "city"
+    t.string "state"
+    t.integer "monthly_energy_consumption_kwh"
+    t.string "budget_range"
+    t.string "decision_timeline"
+    t.string "current_energy_provider"
+    t.integer "score", default: 0
+    t.integer "status", default: 0, null: false
+    t.text "pain_points"
+    t.string "competitor_considered"
+    t.string "lead_source"
+    t.string "utm_campaign"
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.integer "saas_plan_id"
+    t.boolean "b2b", default: false
+    t.string "funnel_stage"
+    t.boolean "site_visit_scheduled", default: false
+    t.datetime "site_visit_date"
+    t.datetime "converted_at"
+    t.datetime "proposal_sent_at"
+    t.datetime "follow_up_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["b2b"], name: "index_saa_s_leads_on_b2b"
+    t.index ["email"], name: "index_saa_s_leads_on_email"
+    t.index ["funnel_stage"], name: "index_saa_s_leads_on_funnel_stage"
+    t.index ["lead_source"], name: "index_saa_s_leads_on_lead_source"
+    t.index ["saas_plan_id"], name: "index_saa_s_leads_on_saas_plan_id"
+    t.index ["score"], name: "index_saa_s_leads_on_score"
+  end
+
   create_table "saa_s_plans", force: :cascade do |t|
     t.string "name"
     t.integer "saas_product_id", null: false
@@ -355,6 +405,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
   end
 
   create_table "users", force: :cascade do |t|
@@ -367,6 +418,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.integer "views", default: 0
+    t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -375,12 +427,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assess_campaigns", "owners"
   add_foreign_key "assess_campaigns", "products"
-  add_foreign_key "categories", "parents"
   add_foreign_key "certifications", "companies"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "companies", "users"
-  add_foreign_key "discussions", "categories"
+  add_foreign_key "discussions", "categories_old", column: "category_id"
   add_foreign_key "discussions", "products"
   add_foreign_key "discussions", "users"
   add_foreign_key "features", "feature_groups"
@@ -393,5 +444,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_154008) do
   add_foreign_key "replies", "users"
   add_foreign_key "reviews", "companies"
   add_foreign_key "reviews", "users"
+  add_foreign_key "saa_s_leads", "saas_plans"
   add_foreign_key "saa_s_plans", "saas_products"
 end

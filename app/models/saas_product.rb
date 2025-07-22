@@ -14,7 +14,6 @@ class SaasProduct < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    authorizable_ransackable_attributes = %w[id name description price billing_cycle features active created_at updated_at]
-    super + authorizable_ransackable_attributes
+    %w[id name description price billing_cycle features active status created_at updated_at]
   end
 end

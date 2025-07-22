@@ -2,6 +2,14 @@ ActiveAdmin.register Review do
 
   permit_params :user_id, :company_id, :rating, :title, :content, :status
 
+  # Scopes para as abas
+  scope :all, default: true
+  scope("Canceladas")                      { |reviews| reviews.where(status: 'canceled') }
+  scope("Iniciadas")                       { |reviews| reviews.where(status: 'started') }
+  scope("Aguardando aprovação")            { |reviews| reviews.where(status: 'pending_approval') }
+  scope("Aguardando revisão do usuário")   { |reviews| reviews.where(status: 'pending_user_review') }
+  scope("Aprovadas")                       { |reviews| reviews.where(status: 'approved') }
+
   index do
     selectable_column
     id_column

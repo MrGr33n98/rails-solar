@@ -24,7 +24,8 @@ ActiveAdmin.register Review do
     actions
   end
 
-  filter :user
+  filter :user, as: :select, collection: -> { User.all }
+  filter :user_id
   filter :company
   filter :rating
   filter :status, as: :select, collection: Review.statuses.keys.map { |k| [k.humanize, k] }

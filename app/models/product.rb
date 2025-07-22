@@ -9,6 +9,9 @@ class Product < ApplicationRecord
 
   before_validation :generate_seo_url, on: :create
 
+  serialize :name_translations, JSON
+  serialize :description_translations, JSON
+
   def self.ransackable_attributes(auth_object = nil)
     authorizable_ransackable_attributes = %w[id name seo_url seo_title status kind premium_until source country created_at updated_at]
     super + authorizable_ransackable_attributes
@@ -16,6 +19,12 @@ class Product < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     ["categories", "feature_groups"]
+  end
+
+  def self.active_products
+    Rails.cache.fetch("active_products", expires_in: 12.hours) do
+      where(status: :active).to_a # Assuming 'active' is a valid status for products
+    end
   end
 
   private

@@ -4,7 +4,7 @@ class CreateAssessCampaigns < ActiveRecord::Migration[7.0]
       t.references :product, null: false, foreign_key: true
       t.string :title
       t.string :code
-      t.references :owner, null: false, foreign_key: true
+      t.references :owner, null: false, foreign_key: { to_table: :users }
       t.integer :goal
       t.integer :achieved
       t.integer :shares
@@ -12,6 +12,7 @@ class CreateAssessCampaigns < ActiveRecord::Migration[7.0]
       t.date :starts_at
       t.date :ends_at
       t.integer :debutantes
+      t.string :status, default: 'draft', null: false
 
       t.timestamps
     end

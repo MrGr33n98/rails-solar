@@ -23,7 +23,6 @@ class AssessCampaign < ApplicationRecord
 
   def ends_at_after_starts_at
     return if ends_at.blank? || starts_at.blank?
-
     if ends_at < starts_at
       errors.add(:ends_at, 'cannot be before starts_at')
     end

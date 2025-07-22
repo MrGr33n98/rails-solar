@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  include ProfanityFilter
+
   belongs_to :post
   belongs_to :user
   has_rich_text :body
@@ -31,17 +33,6 @@ class Comment < ApplicationRecord
 
   def cleanup_notifications
     post.notifications.where(id: post.id).destroy_all
-  end
-
-  def no_curse_words
-    plain_text_body = body.to_plain_text if body.present?
-    return unless plain_text_body.present? && curse_word_found?(plain_text_body)
-
-    errors.add(:base, 'Your comment contains inappropriate language and cannot be saved.')
-  end
-
-  def curse_word_found?(text)
-    CURSE_WORDS.any? { |word| text.match?(Regexp.new(word, Regexp::IGNORECASE)) }
   end
 
   def set_default_status

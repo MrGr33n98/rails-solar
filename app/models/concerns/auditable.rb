@@ -6,8 +6,15 @@ module Auditable
   end
 
   def log_changes
-    # Placeholder for auditing logic
-    # Example: Log changes to a separate audit table or a log file
-    # puts "Changes for #{self.class.name} (ID: #{id}): #{changes}"
+    if self.changed?
+      AuditLog.create!(
+        auditable_type: self.class.name,
+        auditable_id: self.id,
+        action: self.new_record? ? 'create' : 'update',
+        audited_changes: self.changes.transform_values { |v| [v[0].to_s, v[1].to_s] }.to_json
+      ).tap do |log|
+        log.user_id = Current.user.id if defined?(Current) && Current.user
+      end
+    end
   end
 end

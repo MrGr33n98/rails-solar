@@ -12,7 +12,7 @@ class Review < ApplicationRecord
   # after_create :notify_company_about_review # Placeholder for notification callback
 
   def self.ransackable_attributes(auth_object = nil)
-    authorizable_ransackable_attributes = %w[id rating title content status created_at updated_at]
+    authorizable_ransackable_attributes = %w[id rating title content status created_at updated_at user_id company_id]
     super + authorizable_ransackable_attributes
   end
 

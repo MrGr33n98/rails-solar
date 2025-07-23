@@ -1,11 +1,11 @@
 class CreateSaaSPlans < ActiveRecord::Migration[7.0]
   def change
     create_table :saa_s_plans do |t|
-      t.string :name
+      t.string :name, null: false
       t.references :saas_product, null: false, foreign_key: true
-      t.string :tier
+      t.string :tier, null: false
       t.text :features
-      t.decimal :price
+      t.decimal :price, null: false
       t.boolean :active
 
       t.timestamps

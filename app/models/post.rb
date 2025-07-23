@@ -1,4 +1,6 @@
 class Post < ApplicationRecord
+  include ProfanityFilter
+
   validates :title, presence: true, length: { minimum: 5, maximum: 50 }
   validates :body, presence: true, length: { minimum: 10, maximum: 1000 }
   belongs_to :user # This is the author
@@ -17,18 +19,5 @@ class Post < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     ["user", "comments"]
-  end
-
-  private
-
-  def no_curse_words
-    errors.add(:title, 'contains inappropriate language') if curse_word_found?(title)
-    return unless body.present? && curse_word_found?(body.to_s)
-
-    errors.add(:body, 'contains inappropriate language')
-  end
-
-  def curse_word_found?(text)
-    CURSE_WORDS.any? { |word| text.match?(Regexp.new("\b#{Regexp.escape(word)}\b", Regexp::IGNORECASE)) }
   end
 end

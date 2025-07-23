@@ -33,7 +33,7 @@ ActiveAdmin.register Product do
   filter :name
   filter :status
   filter :kind
-  filter :categories, as: :select, collection: Category.all.map { |c| [c.name, c.id] }
+  filter :categories, as: :select, collection: -> { Category.all.map { |c| [c.name, c.id] } }
   filter :created_at
 
   form do |f|
@@ -48,6 +48,7 @@ ActiveAdmin.register Product do
       f.input :country, as: :select, collection: ISO3166::Country.all.map { |c| [c.translations[I18n.locale.to_s] || c.name, c.alpha2] }
       f.input :categories, as: :check_boxes
       f.input :images, as: :file, input_html: { multiple: true }
+      f.input :category_id, as: :select, collection: -> { Category.all.map { |c| [c.name, c.id] } }
     end
     f.actions
   end

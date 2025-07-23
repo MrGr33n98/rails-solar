@@ -1,5 +1,5 @@
-user1 = User.create(email: 'test1@test.com', name: 'test1', password: 'password', password_confirmation: 'password')
-user2 = User.create(email: 'test2@test.com', name: 'test2', password: 'password', password_confirmation: 'password')
+user1 = User.create(email: 'test1@test.com', name: 'test1', password: 'password', password_confirmation: 'password', role: :editor)
+user2 = User.create(email: 'test2@test.com', name: 'test2', password: 'password', password_confirmation: 'password', role: :editor)
 
 3.times do |i|
   post1 = Post.create(title: "Title #{i}", body: "Body #{i} words goes here idk...", user_id: user1.id)
@@ -12,5 +12,5 @@ user2 = User.create(email: 'test2@test.com', name: 'test2', password: 'password'
 end
 
 if Rails.env.development?
-  AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+  AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password', role: :admin)
 end

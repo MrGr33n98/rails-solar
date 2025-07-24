@@ -1,0 +1,2 @@
+class FaqCategory < ApplicationRecord
+end

@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Category, type: :model do
   describe 'associations' do
     it { should have_and_belong_to_many(:products) }
-    it { should have_ancestry }
   end
 
   describe 'validations' do
@@ -42,19 +41,5 @@ RSpec.describe Category, type: :model do
     end
   end
 
-  describe 'scopes' do
-    let!(:root1) { create(:category, name: 'Root 1') }
-    let!(:root2) { create(:category, name: 'Root 2') }
-    let!(:child1) { create(:category, name: 'Child 1', parent: root1) }
-    let!(:child2) { create(:category, name: 'Child 2', parent: root1) }
-    let!(:grandchild) { create(:category, name: 'Grandchild', parent: child1) }
-
-    it '.roots returns only root categories' do
-      expect(Category.roots).to match_array([root1, root2])
-    end
-
-    it '.leaves returns only leaf categories' do
-      expect(Category.leaves).to match_array([root2, child2, grandchild])
-    end
-  end
+  
 end

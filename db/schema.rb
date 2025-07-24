@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_24_034124) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -71,6 +71,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
@@ -105,6 +106,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "blog_posts", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -123,6 +132,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.text "schema_markup"
     t.text "name_translations"
     t.text "description_translations"
+    t.string "ancestry"
+    t.index ["ancestry"], name: "index_categories_on_ancestry"
     t.index ["parent_id"], name: "index_categories_on_parent_id"
     t.index ["slug", "parent_id"], name: "index_categories_on_slug_and_parent_id", unique: true
     t.index ["slug"], name: "index_categories_on_slug", unique: true
@@ -173,13 +184,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
+  create_table "contact_requests", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "contents", force: :cascade do |t|
-    t.string "title"
-    t.string "short_description"
+    t.string "title", null: false
+    t.string "short_description", null: false
     t.string "tags"
     t.string "lp_url"
-    t.string "format"
-    t.string "level"
+    t.string "format", null: false
+    t.string "level", null: false
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -201,9 +220,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.integer "user_id", null: false
     t.integer "product_id", null: false
     t.integer "category_id", null: false
-    t.string "subject"
-    t.text "body"
-    t.integer "status"
+    t.string "subject", null: false
+    t.text "body", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_discussions_on_category_id"
@@ -211,6 +230,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.index ["status"], name: "index_discussions_on_status"
     t.index ["subject"], name: "index_discussions_on_subject"
     t.index ["user_id"], name: "index_discussions_on_user_id"
+  end
+
+  create_table "faq_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "faqs", force: :cascade do |t|
+    t.text "question"
+    t.text "answer"
+    t.integer "faq_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["faq_category_id"], name: "index_faqs_on_faq_category_id"
   end
 
   create_table "feature_groups", force: :cascade do |t|
@@ -243,17 +277,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
   create_table "leads", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "product_id", null: false
-    t.string "name"
-    t.string "email"
-    t.string "role"
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "role", null: false
     t.string "company_size"
     t.string "desired_category"
     t.string "funnel_stage"
     t.integer "score"
     t.datetime "sent_at", precision: nil
+    t.integer "conversion_state", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "conversion_state", default: 0
     t.string "utm_campaign"
     t.string "utm_source"
     t.string "utm_medium"
@@ -277,6 +311,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.string "utm_medium"
     t.index ["channel"], name: "index_marketing_campaigns_on_channel"
     t.index ["scheduled_at"], name: "index_marketing_campaigns_on_scheduled_at"
+  end
+
+  create_table "newsletter_subscriptions", force: :cascade do |t|
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "noticed_events", force: :cascade do |t|
@@ -306,6 +346,26 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
     t.index ["seen_at"], name: "index_noticed_notifications_on_seen_at"
     t.index ["type"], name: "index_noticed_notifications_on_type"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.integer "user_id", null: false
+    t.boolean "read"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "portfolio_projects", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "company_id", null: false
+    t.string "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_portfolio_projects_on_company_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -348,6 +408,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.index ["frequency"], name: "index_pricings_on_frequency"
     t.index ["product_id"], name: "index_pricings_on_product_id"
     t.index ["state"], name: "index_pricings_on_state"
+  end
+
+  create_table "product_inquiries", force: :cascade do |t|
+    t.text "content"
+    t.integer "user_id", null: false
+    t.integer "product_id", null: false
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_inquiries_on_product_id"
+    t.index ["user_id"], name: "index_product_inquiries_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -460,11 +531,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
   end
 
   create_table "saa_s_plans", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.integer "saas_product_id", null: false
-    t.string "tier"
+    t.string "tier", null: false
     t.text "features"
-    t.decimal "price"
+    t.decimal "price", null: false
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -485,6 +556,18 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
     t.string "status", null: false
     t.index ["active"], name: "index_saa_s_products_on_active"
     t.index ["status"], name: "index_saa_s_products_on_status"
+  end
+
+  create_table "segments", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -516,11 +599,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_061208) do
   add_foreign_key "companies", "users"
   add_foreign_key "discussions", "products"
   add_foreign_key "discussions", "users"
+  add_foreign_key "faqs", "faq_categories"
   add_foreign_key "features", "feature_groups"
   add_foreign_key "leads", "products"
   add_foreign_key "leads", "users"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "portfolio_projects", "companies"
   add_foreign_key "posts", "users"
   add_foreign_key "pricings", "products"
+  add_foreign_key "product_inquiries", "products"
+  add_foreign_key "product_inquiries", "users"
   add_foreign_key "quotes", "companies"
   add_foreign_key "replies", "discussions"
   add_foreign_key "replies", "users"

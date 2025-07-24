@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe SaaSProduct, type: :model do
+RSpec.describe SaasProduct, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

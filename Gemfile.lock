@@ -86,8 +86,9 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
-    ancestry (4.3.3)
-      activerecord (>= 5.2.6)
+    apipie-rails (1.4.2)
+      actionpack (>= 5.0)
+      activesupport (>= 5.0)
     arbre (1.7.0)
       activesupport (>= 3.0.0)
       ruby2_keywords (>= 0.0.2)
@@ -303,6 +304,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shoulda-matchers (6.5.0)
+      activesupport (>= 5.2.0)
     sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
@@ -358,7 +361,7 @@ DEPENDENCIES
   active_model_serializers
   activeadmin (~> 3.2.0)
   activerecord-postgis-adapter
-  ancestry
+  apipie-rails
   bootsnap
   capybara
   country_select
@@ -380,6 +383,7 @@ DEPENDENCIES
   rspec-rails
   sassc
   selenium-webdriver
+  shoulda-matchers
   sidekiq
   sprockets-rails
   sqlite3 (~> 1.4)

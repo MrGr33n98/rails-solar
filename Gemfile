@@ -87,6 +87,7 @@ group :development do
 end
 
 group :test do
+  gem 'shoulda-matchers'
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
@@ -97,6 +98,7 @@ gem "noticed", "= 2.2"
 gem 'activeadmin', '~> 3.2.0'
 gem 'sassc'
 gem 'active_model_serializers'
-gem 'ancestry'
+
 gem 'country_select'
 gem 'friendly_id', '~> 5.4'
+gem 'apipie-rails'

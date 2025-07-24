@@ -14,7 +14,7 @@ class SaasLead < ApplicationRecord
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :phone, presence: true
+  validates :phone_number, presence: true
   validates :status, presence: true
   validates :contacted_at, presence: true, if: -> { contacted? || qualified? || unqualified? || converted? }
 

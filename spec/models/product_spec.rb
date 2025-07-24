@@ -11,9 +11,9 @@ RSpec.describe Product, type: :model do
     it { should validate_presence_of(:status) }
     it { should validate_presence_of(:kind) }
 
-    it { should validate_uniqueness_of(:seo_url).allow_blank(true) }
-    it { should validate_presence_of(:seo_title).allow_blank(true) }
-    it { should validate_length_of(:seo_title).is_at_most(60).allow_blank(true) }
+    it { should validate_uniqueness_of(:seo_url).allow_blank }
+      it { should validate_presence_of(:seo_title).allow_blank }
+      it { should validate_length_of(:seo_title).is_at_most(60).allow_blank }
   end
 
   describe 'callbacks' do

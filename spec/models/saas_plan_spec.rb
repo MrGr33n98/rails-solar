@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SaaSPlan, type: :model do
+RSpec.describe SaasPlan, type: :model do
   describe 'associations' do
     it { should belong_to(:saas_product) }
   end

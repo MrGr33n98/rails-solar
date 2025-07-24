@@ -2,7 +2,7 @@ module Auditable
   extend ActiveSupport::Concern
 
   included do
-    before_save :log_changes
+    # after_save :log_changes
   end
 
   def log_changes
